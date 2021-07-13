@@ -1,4 +1,4 @@
-//DEPENDENCIES
+
 const connection = require('./lib/db_connect')
 const cTable = require('console.table');
 const inquirer = require('inquirer');
@@ -9,7 +9,6 @@ var departments = [];
 var departmentNames = [];
 var employees = [];
 var employeeNames = [];
-
 
 
 const displayDepartments = () => {
@@ -62,6 +61,7 @@ const addDepartment = () => {
                 (err, res) => {
                   if (err) throw err;
                   console.log(`\nDepartment added!\n`);
+                  runPrompts();
                 }
             );
 
@@ -69,8 +69,7 @@ const addDepartment = () => {
         }else{
             console.error("Invalid Deparment Name. Please start the application again.");
         }
-    })
-    .then(() => {runPrompts()});
+    });
 }
 
 const displayEmployees = () => {
@@ -163,13 +162,16 @@ const addEmployee = () => {
                 (err, res) => {
                   if (err) throw err;
                   console.log(`\nEmployee added!\n`);
+                  runPrompts();
                 }
+                
             );
+            
         }else{
             console.error("Invalid Employee Name. Please start the application again.");
         }
     })
-    .then(() => {runPrompts()});
+    
 }
 const updateEmployeeRole = () => {
 
@@ -203,11 +205,12 @@ const updateEmployeeRole = () => {
             (err, res) => {
                 if (err) throw err;
                 console.log(`\nEmployee added!\n`);
+                runPrompts()
             }
         );
 
-    })
-    .then(() => {runPrompts()});
+    });
+    
 }
 
 const getEmployeeId = (employeeName) => {
@@ -219,7 +222,6 @@ const getEmployeeId = (employeeName) => {
 
     return null;
 }
-
 
 const getDepartmentId = (departmentName) => {
     for (const department of departments) {
@@ -293,15 +295,13 @@ const addRole = () => {
                 (err, res) => {
                   if (err) throw err;
                   console.log(`\nRole added!\n`);
+                  runPrompts();
                 }
             );
-
-
         }else{
             console.error("Invalid Role Name. Please start the application again.");
         }
-    })
-    .then(() => {runPrompts()});
+    });
 
 }
 const getRoleId = (roleTitle) => {
