@@ -1,4 +1,6 @@
-
+//dependencies 
+//split the connections from the index file
+// future to-do have a separe files for each sql Call
 const connection = require('./lib/db_connect')
 const cTable = require('console.table');
 const inquirer = require('inquirer');
@@ -10,7 +12,8 @@ var departmentNames = [];
 var employees = [];
 var employeeNames = [];
 
-
+//----------- Department queries and function -----------------//
+//display departments
 const displayDepartments = () => {
     let query = 'SELECT department.id AS ID, department.name AS DepartmentName FROM department';
     connection.query(query, (err, res)=>{
@@ -21,8 +24,8 @@ const displayDepartments = () => {
         runPrompts();
     })
 }
-
-const departmentsUpdate = () => {
+//function to update list of departments for display
+const departmentsList = () => {
     connection.query(
         'SELECT * FROM department',
         (err, res) => {
@@ -42,6 +45,7 @@ const departmentsUpdate = () => {
     );
 }
 
+//add deperatment
 const addDepartment = () => {
     inquirer
     .prompt(
@@ -64,17 +68,18 @@ const addDepartment = () => {
                   runPrompts();
                 }
             );
-
-
         }else{
             console.error("Invalid Deparment Name. Please start the application again.");
         }
     });
 }
 
+// -------------------------- Employees queries and functions ----------------- //
+
+//get employees and list them in a table with the manager salery and role
 const displayEmployees = () => {
     let query = '\
-    SELECT employee.id, employee.first_name AS EName, employee.last_name AS ELastName, manager.first_name AS MName, manager.last_name AS MLastName, role.title AS RoleTitle , role.salary AS Salary FROM employee \
+    SELECT employee.id, employee.first_name AS Name, employee.last_name AS LastName, manager.first_name AS ManagerName, manager.last_name AS ManagerLastName, role.title AS RoleTitle , role.salary AS Salary FROM employee \
     LEFT OUTER JOIN employee manager ON (employee.manager_id = manager.id)\
     INNER JOIN role ON (employee.role_id = role.id) ';
 
@@ -95,8 +100,8 @@ const displayEmployees = () => {
         runPrompts();
     })
 };
-
-const employeesUpdate = () => {
+//get the list of emplyees for prompts
+const employeesList = () => {
     connection.query(
         'SELECT * FROM employee',
         (err, res) => {
@@ -121,6 +126,7 @@ const employeesUpdate = () => {
         }
     );
 }
+//add an employee
 const addEmployee = () => {
     console.log('You are adding an employee...');
     inquirer
@@ -173,8 +179,8 @@ const addEmployee = () => {
     })
     
 }
+//update employee role
 const updateEmployeeRole = () => {
-
     inquirer
     .prompt([
         {
@@ -190,8 +196,7 @@ const updateEmployeeRole = () => {
             name: 'role'
         },
     ])
-    .then((answer)=>{
-        
+    .then((answer)=>{  
         connection.query(
             'UPDATE employee SET ? WHERE ?',
             [
@@ -208,21 +213,22 @@ const updateEmployeeRole = () => {
                 runPrompts()
             }
         );
-
     });
-    
 }
 
+// function to get the employee ID
 const getEmployeeId = (employeeName) => {
     for (const employee of employees){
         if(employeeName === employee.name){
             return employee.id;
         }
     }
-
     return null;
 }
 
+// ----------------------------  Department function and queries ------------------------- //
+
+// function to get the department ID
 const getDepartmentId = (departmentName) => {
     for (const department of departments) {
         if(departmentName === department.name){
@@ -231,8 +237,7 @@ const getDepartmentId = (departmentName) => {
     }
 }
 
-
-
+// function to display roles
 const displayRoles = () => {
     let query = 'SELECT * FROM role';
     connection.query(query, (err, res)=>{
@@ -244,7 +249,8 @@ const displayRoles = () => {
     })
 }
 
-const rolesUpdate = () => {
+// update employee roles
+const rolesList = () => {
     connection.query(
         'SELECT * FROM role',
         (err, res) => {
@@ -263,6 +269,7 @@ const rolesUpdate = () => {
         }
     );
 }
+// ADD user role
 const addRole = () => {
     inquirer
     .prompt([
@@ -304,6 +311,8 @@ const addRole = () => {
     });
 
 }
+
+// function to get the user ID
 const getRoleId = (roleTitle) => {
     for (const role of roles) {
         if(roleTitle === role.title){
@@ -320,12 +329,12 @@ const runPrompts = () => {
         type:'list',
         message:'What would you like to do?',
         choices: [
-            'View Employees',
             'View Departments',
             'View Roles',
-            'Add Employee',
+            'View Employees',
             'Add Department',
             'Add Role',
+            'Add Employee',
             'Update Employee Role',
         ]
     })
@@ -358,12 +367,13 @@ const runPrompts = () => {
     })   
 }
 
+// udpate propmpt lists
 const handleData = () => {
-    departmentsUpdate();
-    rolesUpdate();
-    employeesUpdate();
+    departmentsList();
+    rolesList();
+    employeesList();
 }
 
-
+//init
 runPrompts();
 
