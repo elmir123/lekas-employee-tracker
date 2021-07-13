@@ -1,0 +1,21 @@
+{
+"name": "lekas_employee_tracker",
+"version": "1.0.0",
+"description": "Node.js app for tracking employees",
+"main": "index.js",
+"scripts": {
+"test": "echo \"Error: no test specified\" && exit 1",
+"start": "node index.js"
+},
+"keywords": [
+"node",
+"sql",
+"inquirer"
+],
+"author": "elmir123",
+"license": "MIT",
+"dependencies": {
+"inquirer": "^8.1.1",
+"mysql": "^2.18.1"
+}
+}
